@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Notiflix from 'notiflix';
 import { Wrapper } from './App.styled';
 import ContactForm from '../ContactForm';
 import ContactList from '../ContactList';
@@ -25,7 +26,7 @@ export default class App extends Component {
   formSubmitHendler = data => {
     const { name } = data;
     if (this.checkUnicName(name)) {
-      alert(`${name} is already in contacts`);
+      Notiflix.Notify.warning(`${name} is already in contacts`);
       return;
     }
     this.setState(prevSet => ({
