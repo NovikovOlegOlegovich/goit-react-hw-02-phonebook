@@ -1,8 +1,14 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
-import { PhonebookForm, NameInput } from './Phonebook.styled';
+import PropTypes from 'prop-types';
+import {
+  PhonebookForm,
+  NameInput,
+  Label,
+  FormButton,
+} from './ContactForm.styled';
 
-class Phonebook extends React.Component {
+export default class ContactForm extends React.Component {
   state = {
     name: '',
     number: '',
@@ -21,9 +27,9 @@ class Phonebook extends React.Component {
     event.preventDefault();
     const nameId = nanoid();
     this.props.formSubmitHendler({
+      id: nameId,
       name: this.state.name,
       number: this.state.number,
-      id: nameId,
     });
     this.reset();
   };
@@ -31,7 +37,7 @@ class Phonebook extends React.Component {
   render() {
     return (
       <PhonebookForm onSubmit={this.handleSubmit}>
-        <label>
+        <Label>
           Name
           <NameInput
             type="text"
@@ -42,9 +48,10 @@ class Phonebook extends React.Component {
             value={this.state.name}
             onChange={this.handleInputNameChange}
           />
-        </label>
-        <label>
-          <input
+        </Label>
+        <Label>
+          Number
+          <NameInput
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -53,12 +60,14 @@ class Phonebook extends React.Component {
             value={this.state.number}
             onChange={this.handleInputNameChange}
           />
-        </label>
+        </Label>
 
-        <button type="submit">Add contact</button>
+        <FormButton type="submit">Add contact</FormButton>
       </PhonebookForm>
     );
   }
 }
 
-export default Phonebook;
+ContactForm.propTypes = {
+  formSubmitHendler: PropTypes.func.isRequired,
+};

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Wrapper } from './App.styled';
-import Section from '../Section';
-import Phonebook from '../Phonebook';
-import Contacts from '../Contacts';
+import ContactForm from '../ContactForm';
+import ContactList from '../ContactList';
+import Filter from '../Filter';
+import Title from '../Title';
 
 export default class App extends Component {
   state = {
@@ -14,20 +15,57 @@ export default class App extends Component {
     ],
     filter: '',
   };
+
+  checkUnicName = currentName => {
+    const { contacts } = this.state;
+    const arrayNames = contacts.map(contact => contact.name);
+    return arrayNames.includes(currentName);
+  };
+
   formSubmitHendler = data => {
+    const { name } = data;
+    if (this.checkUnicName(name)) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
     this.setState(prevSet => ({
       contacts: [...prevSet.contacts, data],
     }));
   };
+
+  filterHendler = event => {
+    const { value } = event.currentTarget;
+    this.setState({ filter: value });
+  };
+
+  getVisibleContacts = () => {
+    const { contacts } = this.state;
+    const normalizedFilter = this.state.filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
+
   render() {
+    const visibleContacts = this.getVisibleContacts();
+
     return (
       <Wrapper>
-        <Section title={'Phonebook'}>
-          <Phonebook formSubmitHendler={this.formSubmitHendler} />
-        </Section>
-        <Section title={'Contacts'}>
-          <Contacts contacts={this.state.contacts} />
-        </Section>
+        <Title>Phonebook</Title>
+        <ContactForm formSubmitHendler={this.formSubmitHendler} />
+
+        <Title>Contacts</Title>
+        <Filter filter={this.state.filter} filterHendler={this.filterHendler} />
+        <ContactList
+          contacts={visibleContacts}
+          ondDeleteContact={this.deleteContact}
+        />
       </Wrapper>
     );
   }
