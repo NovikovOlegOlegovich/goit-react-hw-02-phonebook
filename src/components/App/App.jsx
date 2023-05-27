@@ -19,8 +19,7 @@ export default class App extends Component {
 
   checkUnicName = currentName => {
     const { contacts } = this.state;
-    const arrayNames = contacts.map(contact => contact.name);
-    return arrayNames.includes(currentName);
+    return contacts.find(contact => contact.name === currentName);
   };
 
   formSubmitHendler = data => {
